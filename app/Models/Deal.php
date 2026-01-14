@@ -10,7 +10,13 @@ class Deal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['team_id', 'contact_id', 'company_id'];
+    protected $fillable = [
+        'team_id',
+        'pipeline_id',
+        'contact_id',
+        'company_id',
+        'title',
+    ];
 
     public function team(): BelongsTo
     {
@@ -25,5 +31,10 @@ class Deal extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function pipeline(): BelongsTo
+    {
+        return $this->belongsTo(Pipeline::class);
     }
 }
