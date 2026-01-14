@@ -19,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Pages\Auth\Register;
+use App\Filament\Pages\Registration;
 // use App\Filament\Admin\Pages\Auth\Register;
 
 class AdminPanelProvider extends PanelProvider
@@ -31,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             // ->registration()
-            ->registration(Register::class)
+            ->registration(Registration::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
