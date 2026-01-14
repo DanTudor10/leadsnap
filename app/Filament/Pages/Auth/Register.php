@@ -2,23 +2,26 @@
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Pages\Auth\Register as BaseRegister;
+// use Filament\Pages\Auth\Register as BaseRegister;
+use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 use App\Models\Team;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Model;
 
 class Register extends BaseRegister
 {
-    protected static string $view = 'filament.pages.auth.register'; 
+    // protected static string $view = 'filament.pages.auth.register'; 
+    protected string $view = 'filament.pages.auth.register';
 
     public function getFormSchema(): array
     {
         return [
             Wizard::make([
-                // PASUL 1 – Email
+                // STEP 1 - EMAIL
                 Wizard\Step::make('Email')
                     ->icon('heroicon-o-envelope')
                     ->completedIcon('heroicon-s-check-circle')
@@ -36,7 +39,7 @@ class Register extends BaseRegister
                             ]),
                     ]),
 
-                // PASUL 2 – Profil complet
+                // STEP 2 - PROFILE INFO
                 Wizard\Step::make('Profil')
                     ->icon('heroicon-o-user')
                     ->completedIcon('heroicon-s-check-circle')
@@ -76,7 +79,7 @@ class Register extends BaseRegister
                             ]),
                     ]),
 
-                // PASUL 3 – Organizație / Team
+                // STEP 3 - ORGANIZATION/TEAM
                 Wizard\Step::make('Organizație')
                     ->icon('heroicon-o-building-office-2')
                     ->completedIcon('heroicon-s-check-circle')
@@ -93,15 +96,14 @@ class Register extends BaseRegister
                             ]),
                     ]),
             ])
-            ->submitAction(view('filament.pages.auth.register.submit')) // butonul custom "Înainte"
+            ->submitAction(view('filament.pages.auth.register.submit')) // custom button for submission
             ->skippable(false)
             ->startOnStep(1),
         ];
     }
 
-    protected function handleRegistration(array $data): \Illuminate\Contracts\Auth\Authenticatable
+    protected function handleRegistration(array $data): \Illuminate\Database\Eloquent\Model
     {
-        // Creăm Team-ul (organizația)
         $team = Team::create([
             'name' => $data['team_name'],
         ]);
@@ -110,19 +112,18 @@ class Register extends BaseRegister
         $user = $this->getUserModel()::create([
             'first_name' => $data['first_name'],
             'last_name'  => $data['last_name'],
-            'name'       => $data['first_name'] . ' ' . $data['last_name'], // dacă vrei să păstrezi și câmpul name
+            'name'       => $data['first_name'] . ' ' . $data['last_name'], // if you want to store full name
             'email'      => $data['email'],
             'password'   => Hash::make($data['password']),
             'phone'      => $data['phone'] ?? null,
             'team_id'    => $team->id,
         ]);
 
-        // Opțional: îl facem owner al team-ului (dacă ai roluri)
+        // Optional: assign role to user
         // $user->assignRole('owner'); 
 
         event(new Registered($user));
 
-        // Logăm user-ul automat
         auth()->login($user);
 
         return $user;

@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+<x-filament-panels::page.simple>
     <div class="fi-auth-card max-w-2xl">
         {{ $this->form }}
 
@@ -6,4 +6,4 @@
             Prin continuare, ești de acord cu Termenii și Condițiile și Politica de Confidențialitate
         </div>
     </div>
-</x-filament-panels::page>
+</x-filament-panels::page.simple>
