@@ -11,6 +11,7 @@ use App\Models\Team;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Form;
 
 class Register extends BaseRegister
 {
