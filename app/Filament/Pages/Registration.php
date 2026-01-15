@@ -276,7 +276,7 @@ class Registration extends Register
         }
 
         $this->sendEmailVerificationNotification($user);
-        $this->fillInvitedUserAndLogin($user);
+        // $this->fillInvitedUserAndLogin($user);
 
         return $user;
     }
