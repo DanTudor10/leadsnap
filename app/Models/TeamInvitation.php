@@ -10,7 +10,17 @@ class TeamInvitation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['team_id'];
+    protected $fillable = [
+        'team_id',
+        'email',
+        'role', 
+        'token', 
+        'accepted_at', 
+    ];
+
+    protected $casts = [
+        'accepted_at' => 'datetime',
+    ];
 
     public function team(): BelongsTo
     {
