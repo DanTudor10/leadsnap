@@ -12,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
-// use Filament\Forms\Components\Grid;
 use Filament\Schemas\Components\Grid;
 use App\Models\Team;
 use App\Models\Industry;
@@ -23,6 +22,11 @@ use Illuminate\Support\Str;
 
 class Registration extends Register
 {
+    public function getMaxWidth(): string
+    {
+        return '5xl'; 
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema->schema([
@@ -178,7 +182,7 @@ class Registration extends Register
     protected function getTeamSizeFormComponent(): Component
     {
         return Radio::make('team_size_range')
-            ->label('Câte persoane vor folosi CRMPro?')
+            ->label('Câte persoane vor folosi Leadsnap?')
             ->helperText('Acest lucru ne ajută să-ți oferim cel mai bun plan de prețuri')
             ->options([
                 'doar-eu' => 'Doar eu',
@@ -197,7 +201,7 @@ class Registration extends Register
     {
         return Repeater::make('team_invitations')
             ->label('Invită-ți echipa')
-            ->helperText('Adaugă colegii care vor folosi CRMPro. Poți sări acest pas și să-i inviți mai târziu.')
+            ->helperText('Adaugă colegii care vor folosi Leadsnap. Poți sări acest pas și să-i inviți mai târziu.')
             ->schema([
                 Grid::make(2)
                     ->schema([
