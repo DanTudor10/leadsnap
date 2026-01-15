@@ -11,7 +11,11 @@ class Team extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name', 
+        'team_size_range', 
+        'exact_team_size',
+    ];
 
     public function users(): HasMany
     {
