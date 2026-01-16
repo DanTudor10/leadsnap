@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Filament\Schemas\Components\Component;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 
 class InvitationRegister extends Register
 {
     public ?TeamInvitation $invitation = null;
+
+    protected static ?string $slug = 'auth/invitation/{token}';
 
     public function getMaxWidth(): string
     {
@@ -21,9 +24,7 @@ class InvitationRegister extends Register
 
     public function mount(): void
     {
-        // Nu apela parent::mount() pentru că va încerca să facă verificări de autentificare
-        
-        // Preia token-ul din parametrul rutei
+        // Get token from route
         $token = request()->route('token');
 
         if (!$token) {
@@ -38,9 +39,24 @@ class InvitationRegister extends Register
             abort(404, 'Invitația nu există sau a fost deja acceptată');
         }
 
-        // Pre-completează email-ul
+        // Pre-fill email
         $this->form->fill([
             'email' => $this->invitation->email,
+        ]);
+    }
+
+    /**
+     * Form
+     */
+    public function form(Schema $schema): Schema
+    {
+        return $schema->schema([
+            $this->getEmailFormComponent(),
+            $this->getFirstNameFormComponent(),
+            $this->getLastNameFormComponent(),
+            $this->getPasswordFormComponent(),
+            $this->getPasswordConfirmationFormComponent(),
+            $this->getPhoneFormComponent(),
         ]);
     }
 
@@ -123,13 +139,14 @@ class InvitationRegister extends Register
                 'team_id'    => $this->invitation->team_id,
             ]);
 
+            // Assign role to user from invitation
             $user->assignRole($this->invitation->role);
 
+            // Mark invitation as accepted
             $this->invitation->update([
                 'accepted_at' => now(),
             ]);
 
-            // Trimite email de verificare
             $this->sendEmailVerificationNotification($user);
 
             return $user;
