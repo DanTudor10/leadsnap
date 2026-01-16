@@ -11,7 +11,5 @@ Route::get('/', function () {
     return redirect('/admin/login'); 
 });
 
-// Route::get(
-//     '/admin/auth/invitation/{token}',
-//     InvitationRegister::class
-// )->name('filament.admin.auth.invitation-register');
+Route::get('/admin/auth/invitation/{token}', InvitationRegister::class)
+    ->name('filament.admin.auth.invitation-register');

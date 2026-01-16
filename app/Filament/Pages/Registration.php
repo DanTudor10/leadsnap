@@ -263,16 +263,23 @@ class Registration extends Register
         // Create team invitations
         if (!empty($data['team_invitations'])) {
             foreach ($data['team_invitations'] as $invitation) {
+                $token = Str::random(32); // unique token for invitation link
+                
                 TeamInvitation::create([
                     'team_id' => $team->id,
                     'email' => $invitation['email'],
                     'role' => $invitation['role'] ?? 'user',
-                    'token' => Str::random(32), // unique token for invitation link
+                    'token' => $token,
                 ]);
-            }
 
-            // TODO: Send invitation emails
-            // $this->sendTeamInvitations($team, $data['team_invitations']);
+                // Send invitation email
+                \Illuminate\Support\Facades\Notification::route('mail', $invitation['email'])
+                    ->notify(new \App\Notifications\TeamInvitationNotification(
+                        teamName: $team->name,
+                        token: $token,
+                        role: $invitation['role'] ?? 'user'
+                    ));
+            }
         }
 
         $this->sendEmailVerificationNotification($user);
