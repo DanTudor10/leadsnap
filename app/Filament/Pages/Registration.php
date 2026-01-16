@@ -19,6 +19,7 @@ use App\Models\TeamInvitation;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class Registration extends Register
 {
@@ -273,12 +274,15 @@ class Registration extends Register
                 ]);
 
                 // Send invitation email
+                Log::info('Trimitem invitația către: ' . $invitation['email'] . ' cu token ' . $token);
                 \Illuminate\Support\Facades\Notification::route('mail', $invitation['email'])
                     ->notify(new \App\Notifications\TeamInvitationNotification(
                         teamName: $team->name,
                         token: $token,
                         role: $invitation['role'] ?? 'user'
                     ));
+                Log::info('Invitația a fost procesată (sau pusă în coadă).');
+
             }
         }
 

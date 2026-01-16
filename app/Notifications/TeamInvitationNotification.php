@@ -23,6 +23,7 @@ class TeamInvitationNotification extends Notification
 
     public function toMail($notifiable): MailMessage
     {
+        Log::info("Pregătim mail pentru {$notifiable->email} cu token {$this->token}");
         $url = route('filament.admin.auth.invitation-register', ['token' => $this->token]);
 
         $roleText = $this->role === 'admin' ? 'Administrator' : 'Utilizator';
